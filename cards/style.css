@@ -1,0 +1,89 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: black;
+}
+
+html,body{
+    height: 100%;
+    width: 100%;
+}
+#main{
+    height: 100%;
+    width: 100%;
+    /* display: flex;
+    align-items: center;
+    justify-content: center; */
+}
+.card{
+    /* to make at center and back on back cards */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+
+    height: 300px;
+    width: 240px;
+    border: 2px solid white;
+    border-radius: 20px;
+    overflow: hidden;
+}
+#card1{
+    z-index: 5;
+     background-color: salmon;
+}
+#card2{
+    z-index: 4;
+    rotate: -7deg;
+    background-color: blue;
+}
+#card2:hover{
+    z-index: 20;
+}
+#card3{
+    z-index: 3;
+    rotate: -14deg;
+    background-color: green;
+}
+#card3:hover{
+    z-index: 20;
+
+}
+#card4{
+    z-index: 2;
+    rotate: -21deg;
+    background-color: yellow;
+}
+
+#card4:hover{
+    z-index: 20;
+}
+#card5{
+    z-index: 1;
+    rotate: -28deg;
+    background-color: yellow;
+}
+#card5:hover{
+    z-index: 20;
+}
+img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+@keyframes color-change {
+  0%   { color: #e91e63; }    /* Pink */
+  50%  { color: #3f51b5; }    /* Indigo */
+  100% { color: #e91e63; }    /* Pink again */
+}
+
+.animated-text {
+  font-size: 3rem;
+  font-weight: bold;
+  animation: color-change 3s infinite;
+  text-align: center;
+  margin-top: 100px;
+  font-family: 'Arial', sans-serif;
+}
