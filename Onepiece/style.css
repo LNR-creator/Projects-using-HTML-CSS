@@ -1,0 +1,107 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+h1{
+    display: flex;
+    /* align-items: center; */
+    justify-content: center;
+    font-family: cursive;
+     
+}
+.container{
+    height: 100vh;
+    background: url(images/herob.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.heading{
+    font-size: 120px;
+    position: absolute;
+    top: 40%;
+    left: 15%;
+    margin-left: 0;
+}
+
+.card-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+.one-team{
+    background: rgb(129, 200, 232);
+}
+.card-text{
+    font-weight: 700;
+}
+.card{
+    cursor: pointer;
+}
+.card img{
+    height: 400px;
+    width: 287px;
+    object-fit: cover;
+}
+.team-name{
+    display: flex;
+    justify-content: center;
+    background: #d3e06f;
+}
+
+#Luffy:hover{
+   display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scale(2);
+    z-index: 40;
+    left: 10%;
+}
+
+#Zoro:hover{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scale(2);
+    z-index: 40;
+}
+
+#Nami:hover{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scale(2);
+    z-index: 40;
+}
+
+#Sanji:hover{
+  display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scale(2);
+    z-index: 40;
+    right: 10%;
+}
+
+.end{
+    width: max;
+    height: 400px;
+    padding-top: 100px;
+    /* background: url(images/all.jpg); */
+    color: rgb(244, 240, 240) ;
+    background: #464444;
+    display: flex;
+    justify-content: space-around;
+}
+
+#drop{
+    position: relative;
+    top: +3.5px;
+    background: white;
+    color: black;
+    text-decoration: none;
+    border: none;
+}
+
