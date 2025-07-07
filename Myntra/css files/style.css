@@ -1,0 +1,180 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    border-bottom: 2px solid rgb(93, 88, 88);
+
+}
+
+img {
+    height: 45px;
+    width: 60px;
+}
+
+.search-bar {
+    margin-top: 0px;
+}
+
+.search {
+    height: 30px;
+    width: 500px;
+}
+
+#search-icon {
+    box-sizing: content-box;
+    height: 20px;
+    padding: 10px;
+
+    background-color: #f5f5f6;
+    color: #282c3f;
+    font-weight: 300;
+    border-radius: 4px 0 0 4px;
+}
+
+.nav-items {
+    margin: 10px;
+    font-weight: 700;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.footer_container {
+    padding: 30px 0px 40px 0px;
+    background: #FAFBFC;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.footer_column {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer_column h3 {
+    color: #282c3f;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+.footer_column a {
+    color: #696b79;
+    font-size: 15px;
+    text-decoration: none;
+    padding-bottom: 5px;
+}
+
+.item-image {
+    width: 250px;
+    height: 333px;
+}
+
+#item1 {
+    width: 250px;
+    height: 333px;
+}
+
+.copyright {
+    color: rgb(148, 150, 159);
+    padding: 15px;
+}
+
+.container {
+    width: 80%;
+
+    width: 80%;
+    margin: 50px 10%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.items {
+    width: 250px;
+    margin: 10px;
+}
+
+.item-image {
+    width: 100%;
+}
+
+.rating {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.company-name {
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1;
+    color: rgb(40, 44, 63);
+    margin-bottom: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.item-name {
+    color: rgb(83, 87, 102);
+    font-size: 14px;
+    line-height: 1;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 400;
+    display: block;
+}
+
+.price {
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 15px;
+    color: rgb(40, 44, 63);
+    white-space: nowrap;
+}
+
+.current-price {
+    font-size: 14px;
+    font-weight: 700;
+    color: rgb(40, 44, 63);
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: rgb(203, 145, 19);
+    font-weight: 400;
+    margin-left: 5px;
+    font-size: 12px;
+}
+
+.discount {
+    color: rgb(222, 82, 12);
+    font-weight: 600;
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+.btn-add-bag {
+    width: 100%;
+    height: 30px;
+    background-color: lightgreen;
+    border-radius: 10px;
+    font-family: sans-serif;
+    border: none;
+}
+
+.items {
+    width: 250px;
+    height: max-content;
+}
