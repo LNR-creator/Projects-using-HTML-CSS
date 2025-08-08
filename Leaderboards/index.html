@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>LeetCode Tracker</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #0f1724;
+    color: white;
+    margin: 0;
+    padding: 20px;
+  }
+  h1 { margin: 0 0 10px; }
+  .controls { margin-bottom: 15px; }
+  input {
+    padding: 8px;
+    margin-right: 5px;
+  }
+  button {
+    padding: 8px 12px;
+    background: #06b6d4;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+  th, td {
+    padding: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    text-align: left;
+  }
+  .muted { color: #9aa4b2; }
+</style>
+</head>
+<body>
+<h1>LeetCode Tracker</h1>
+
+<div class="controls">
+  <input id="usernameInput" placeholder="LeetCode Username" />
+  <button id="addBtn">Add User</button>
+  <button id="refreshBtn">Refresh Now</button>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Total</th>
+      <th>Easy</th>
+      <th>Medium</th>
+      <th>Hard</th>
+    </tr>
+  </thead>
+  <tbody id="profilesTable">
+    <tr><td colspan="5" class="muted">No profiles yet.</td></tr>
+  </tbody>
+</table>
+
+<script>
+const USE_PROXY = true;
+const PROXY_URL = "/api/leetcode";
+const REFRESH_INTERVAL_MS = 60_000;
+
+let profiles = JSON.parse(localStorage.getItem("lc_profiles") || "[]");
+
+document.getElementById("addBtn").addEventListener("click", addProfile);
+document.getElementById("refreshBtn").addEventListener("click", refreshAll);
+
+function saveProfiles() {
+  localStorage.setItem("lc_profiles", JSON.stringify(profiles));
+}
+
+function render() {
+  const table = document.getElementById("profilesTable");
+  if (profiles.length === 0) {
+    table.innerHTML = `<tr><td colspan="5" class="muted">No profiles yet.</td></tr>`;
+    return;
+  }
+  table.innerHTML = "";
+  profiles.forEach(p => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${p.username}</td>
+      <td>${p.total ?? "-"}</td>
+      <td>${p.easy ?? "-"}</td>
+      <td>${p.medium ?? "-"}</td>
+      <td>${p.hard ?? "-"}</td>
+    `;
+    table.appendChild(row);
+  });
+}
+
+function addProfile() {
+  const username = document.getElementById("usernameInput").value.trim();
+  if (!username) return alert("Enter a username");
+  if (profiles.some(p => p.username.toLowerCase() === username.toLowerCase())) {
+    return alert("User already added");
+  }
+  profiles.push({ username });
+  saveProfiles();
+  render();
+  refreshUser(username);
+}
+
+async function fetchLeetCode(username) {
+  const query = {
+    query: `
+      query userProfile($username: String!) {
+        matchedUser(username: $username) {
+          submitStats {
+            acSubmissionNum {
+              difficulty
+              count
+            }
+          }
+        }
+      }
+    `,
+    variables: { username }
+  };
+
+  const res = await fetch(PROXY_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(query)
+  });
+
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+async function refreshUser(username) {
+  try {
+    const data = await fetchLeetCode(username);
+    const stats = data.data?.matchedUser?.submitStats?.acSubmissionNum || [];
+    const user = profiles.find(p => p.username === username);
+    if (user) {
+      stats.forEach(s => {
+        if (s.difficulty === "All") user.total = s.count;
+        if (s.difficulty === "Easy") user.easy = s.count;
+        if (s.difficulty === "Medium") user.medium = s.count;
+        if (s.difficulty === "Hard") user.hard = s.count;
+      });
+    }
+    saveProfiles();
+    render();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function refreshAll() {
+  for (const p of profiles) {
+    await refreshUser(p.username);
+  }
+}
+
+setInterval(refreshAll, REFRESH_INTERVAL_MS);
+render();
+if (profiles.length) refreshAll();
+</script>
+</body>
+</html>
