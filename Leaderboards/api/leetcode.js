@@ -1,22 +1,41 @@
 export default async function handler(req, res) {
-  try {
-    const graphqlQuery = req.body;
+    const { username } = req.query;
+    try {
+        const response = await fetch("https://leetcode.com/graphql", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                query: `
+                query getUserProfile($username: String!) {
+                    matchedUser(username: $username) {
+                        username
+                        submitStats: submitStatsGlobal {
+                            acSubmissionNum {
+                                difficulty
+                                count
+                            }
+                        }
+                    }
+                }`,
+                variables: { username }
+            })
+        });
 
-    const response = await fetch("https://leetcode.com/graphql", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(graphqlQuery),
-    });
+        const json = await response.json();
+        if (!json.data.matchedUser) {
+            return res.status(404).json({ status: "error", message: "User not found" });
+        }
 
-    const text = await response.text();
-    res.status(200).setHeader("Content-Type", "application/json").send(text);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+        const stats = json.data.matchedUser.submitStats.acSubmissionNum;
+        res.status(200).json({
+            status: "success",
+            username: json.data.matchedUser.username,
+            totalSolved: stats[0].count,
+            easySolved: stats[1].count,
+            mediumSolved: stats[2].count,
+            hardSolved: stats[3].count
+        });
+    } catch (err) {
+        res.status(500).json({ status: "error", message: err.message });
+    }
 }
-
-export const config = {
-  api: {
-    bodyParser: true,
-  },
-};
