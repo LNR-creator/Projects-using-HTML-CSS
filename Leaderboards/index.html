@@ -1,78 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>LeetCode Leaderboard</title>
 <style>
     body {
-        background-color: #0f172a;
-        color: white;
         font-family: Arial, sans-serif;
+        background-color: #0d1724;
+        color: white;
+        text-align: center;
         padding: 20px;
     }
-    h1 {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    .controls {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin-bottom: 20px;
-    }
+    h1 { font-size: 2rem; margin-bottom: 20px; }
     input {
-        padding: 10px;
-        border-radius: 6px;
-        border: 2px solid #f97316;
+        padding: 8px;
+        border-radius: 5px;
+        border: 2px solid orange;
         outline: none;
     }
     button {
-        padding: 10px 15px;
-        background-color: #06b6d4;
-        color: white;
+        padding: 8px 14px;
+        margin-left: 5px;
         border: none;
-        border-radius: 6px;
+        border-radius: 5px;
         cursor: pointer;
-    }
-    button:hover {
-        background-color: #0891b2;
+        background-color: #00bcd4;
+        color: black;
+        font-weight: bold;
     }
     table {
         width: 100%;
+        margin-top: 20px;
         border-collapse: collapse;
-        margin-top: 10px;
     }
     th, td {
-        padding: 12px;
-        text-align: center;
+        padding: 10px;
+        border-bottom: 1px solid #2c3e50;
     }
-    th {
-        background-color: #1e293b;
-    }
+    th { background-color: #1b2838; }
     tr {
         transition: transform 0.5s ease, background-color 0.5s ease;
     }
-    .rank-1 { background-color: #ffd70033; }
-    .rank-2 { background-color: #c0c0c033; }
-    .rank-3 { background-color: #cd7f3233; }
-    a {
-        color: #38bdf8;
-        text-decoration: none;
-    }
-    a:hover {
-        text-decoration: underline;
-    }
+    .rank-1 { background-color: gold; color: black; }
+    .rank-2 { background-color: silver; color: black; }
+    .rank-3 { background-color: #cd7f32; color: black; }
 </style>
 </head>
 <body>
-<h1>LeetCode Leaderboard</h1>
-<div class="controls">
-    <input type="text" id="username" placeholder="LeetCode Username">
-    <button onclick="addUser()">Add User</button>
-    <button onclick="refreshData()">Refresh Now</button>
-</div>
 
-<table>
+<h1>LeetCode Leaderboard</h1>
+<input type="text" id="usernameInput" placeholder="LeetCode Username" />
+<button onclick="addUser()">Add User</button>
+<button onclick="refreshData()">Refresh Now</button>
+
+<table id="leaderboard">
     <thead>
         <tr>
             <th>Rank</th>
@@ -84,67 +66,110 @@
             <th>Action</th>
         </tr>
     </thead>
-    <tbody id="leaderboard"></tbody>
+    <tbody></tbody>
 </table>
 
 <script>
-    let users = JSON.parse(localStorage.getItem("leetcodeUsers")) || [];
+let users = JSON.parse(localStorage.getItem("users")) || [];
 
-    async function fetchUserData(username) {
-        const res = await fetch(`/api/leetcode?username=${username}`);
-        return res.json();
-    }
+async function fetchLeetCodeData(username) {
+    try {
+        const query = {
+            query: `
+                query getUserProfile($username: String!) {
+                    matchedUser(username: $username) {
+                        username
+                        submitStatsGlobal {
+                            acSubmissionNum {
+                                difficulty
+                                count
+                            }
+                        }
+                    }
+                }
+            `,
+            variables: { username }
+        };
 
-    async function refreshData() {
-        const data = [];
-        for (let username of users) {
-            const userData = await fetchUserData(username);
-            if (userData.status === "success") data.push(userData);
-        }
-        data.sort((a, b) => b.totalSolved - a.totalSolved);
-        renderTable(data);
-    }
-
-    function renderTable(data) {
-        const tbody = document.getElementById("leaderboard");
-        tbody.innerHTML = "";
-        data.forEach((u, index) => {
-            const tr = document.createElement("tr");
-            if (index === 0) tr.classList.add("rank-1");
-            else if (index === 1) tr.classList.add("rank-2");
-            else if (index === 2) tr.classList.add("rank-3");
-
-            tr.innerHTML = `
-                <td>${index + 1}</td>
-                <td><a href="https://leetcode.com/${u.username}/" target="_blank">${u.username}</a></td>
-                <td>${u.totalSolved}</td>
-                <td>${u.easySolved}</td>
-                <td>${u.mediumSolved}</td>
-                <td>${u.hardSolved}</td>
-                <td><button onclick="deleteUser('${u.username}')">Delete</button></td>
-            `;
-            tbody.appendChild(tr);
+        const response = await fetch("https://leetcode.com/graphql", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(query)
         });
+
+        const data = await response.json();
+        if (!data.data.matchedUser) return null;
+
+        let stats = data.data.matchedUser.submitStatsGlobal.acSubmissionNum;
+        let total = stats.find(s => s.difficulty === "All").count;
+        let easy = stats.find(s => s.difficulty === "Easy").count;
+        let medium = stats.find(s => s.difficulty === "Medium").count;
+        let hard = stats.find(s => s.difficulty === "Hard").count;
+
+        return { username, total, easy, medium, hard };
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        return null;
+    }
+}
+
+async function refreshData() {
+    let results = [];
+    for (let user of users) {
+        let data = await fetchLeetCodeData(user);
+        if (data) results.push(data);
     }
 
-    function addUser() {
-        const username = document.getElementById("username").value.trim();
-        if (username && !users.includes(username)) {
-            users.push(username);
-            localStorage.setItem("leetcodeUsers", JSON.stringify(users));
-            refreshData();
-        }
-        document.getElementById("username").value = "";
-    }
+    results.sort((a, b) => b.total - a.total);
+    renderLeaderboard(results);
+}
 
-    function deleteUser(username) {
-        users = users.filter(u => u !== username);
-        localStorage.setItem("leetcodeUsers", JSON.stringify(users));
-        refreshData();
-    }
+function renderLeaderboard(data) {
+    let tbody = document.querySelector("#leaderboard tbody");
+    tbody.innerHTML = "";
 
+    data.forEach((user, index) => {
+        let row = document.createElement("tr");
+
+        if (index === 0) row.classList.add("rank-1");
+        if (index === 1) row.classList.add("rank-2");
+        if (index === 2) row.classList.add("rank-3");
+
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td><a href="https://leetcode.com/${user.username}/" target="_blank" style="color:inherit;text-decoration:none;">${user.username}</a></td>
+            <td>${user.total}</td>
+            <td>${user.easy}</td>
+            <td>${user.medium}</td>
+            <td>${user.hard}</td>
+            <td><button onclick="removeUser('${user.username}')">❌</button></td>
+        `;
+
+        tbody.appendChild(row);
+    });
+}
+
+function addUser() {
+    let username = document.getElementById("usernameInput").value.trim();
+    if (!username || users.includes(username)) return;
+    users.push(username);
+    localStorage.setItem("users", JSON.stringify(users));
+    document.getElementById("usernameInput").value = "";
     refreshData();
-    setInterval(refreshData, 60000); // auto refresh every minute
+}
+
+function removeUser(username) {
+    users = users.filter(user => user !== username);
+    localStorage.setItem("users", JSON.stringify(users));
+    refreshData();
+}
+
+// Auto-update every second
+setInterval(refreshData, 1000);
+
+// Initial load
+refreshData();
 </script>
+
 </body>
 </html>
