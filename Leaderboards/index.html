@@ -3,7 +3,9 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>LeetCode Leaderboard</title>
+  <title>LeetCode Leaderboard🏆</title>
+  <!-- Add in <head> above your <style> -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
   <style>
     :root{
       --bg1:#071025; --bg2:#0f2540; --muted:#9aa4b2; --accent:#06b6d4;
@@ -16,8 +18,15 @@
       display:flex; align-items:flex-start; justify-content:center; padding:28px;
     }
     .wrap{ width:100%; max-width:980px; }
-    header{ display:flex; gap:12px; align-items:center; margin-bottom:18px; }
-    h1{ margin:0; font-size:20px; }
+    header{ display:flex; gap:12px; align-items:center; margin-bottom:18px;justify-content: center; }
+    h1{ margin:0; font-size:60pxpx; 
+      margin: 0;
+    font-family: 'Orbitron', sans-serif;
+  font-size: 30px;
+  letter-spacing: 2px;
+  color: #06b6d4;
+  text-shadow: 0 0 6px rgba(6,182,212,0.4), 0 0 12px rgba(59,130,246,0.3);
+    }
     .card{ background: rgba(255,255,255,0.02); padding:18px; border-radius:12px; width:100%; box-shadow:0 10px 30px rgba(3,7,18,0.6); }
     .controls{ display:flex; gap:8px; align-items:center; margin-bottom:14px; flex-wrap:wrap; }
     input[type="text"]{ padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:inherit; min-width:240px; }
@@ -50,13 +59,19 @@
       thead{ display:none; } table, tbody, tr, td { display:block; width:100%;}
       td{ display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid rgba(255,255,255,0.02);}
     }
+    #usernameInput{
+        width: 300px;
+        height: 20px;
+        border: none;
+        border-radius: 5px;
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
       <div>
-        <h1>🏆 LeetCode Leaderboard</h1>
+        <h1>CSE-C Leetcode Leaderboard</h1>
         <div class="small">Auto-refresh: <span id="autoStatus">paused</span></div>
       </div>
     </header>
@@ -278,5 +293,7 @@ if (users.length) refreshAll();
 startAuto();
 
 </script>
+
+
 </body>
 </html>
