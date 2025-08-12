@@ -1,55 +1,132 @@
-body {
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-  background-color: #f8f9fa;
+/* ==== GLOBAL STYLES ==== */
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #1e1f26, #23262f);
+  color: #f4f4f4;
   padding: 20px;
 }
 
+/* ==== CONTAINER ==== */
 .container {
-  width: 90%;
-  max-width: 800px;
+  width: 95%;
+  max-width: 1000px;
   margin: auto;
-  background: white;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.8s ease-in-out;
 }
 
+/* ==== TITLE ==== */
 h1 {
   text-align: center;
-  color: #333;
+  font-size: 2.4rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
 }
 
+/* ==== TABLE ==== */
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-th, td {
-  padding: 12px;
-  border: 1px solid #ddd;
-  text-align: center;
+thead {
+  background: linear-gradient(90deg, #ff8c00, #ff4500);
 }
 
 th {
-  background-color: #007bff;
-  color: white;
+  padding: 14px;
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
+td {
+  padding: 12px;
+  text-align: center;
+  font-size: 1rem;
+  color: #ddd;
+}
+
+/* Zebra striping */
+tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Hover effect */
+tbody tr:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.01);
+  transition: all 0.2s ease-in-out;
+}
+
+/* ==== LINKS ==== */
 td a {
-  color: #007bff;
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ff8c00;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
 
 td a:hover {
-  text-decoration: underline;
+  background-color: #ff8c00;
+  color: #fff;
+  box-shadow: 0 0 10px #ff8c00;
 }
 
+/* ==== RANK COLORS ==== */
+.rank-1 {
+  color: gold;
+  font-weight: bold;
+  text-shadow: 0 0 8px gold;
+}
+
+.rank-2 {
+  color: silver;
+  font-weight: bold;
+  text-shadow: 0 0 8px silver;
+}
+
+.rank-3 {
+  color: #cd7f32;
+  font-weight: bold;
+  text-shadow: 0 0 8px #cd7f32;
+}
+
+/* ==== NOTE ==== */
 .note {
   text-align: center;
   font-size: 14px;
-  color: #666;
+  color: #aaa;
   margin-top: 15px;
+}
+
+/* ==== ANIMATIONS ==== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
